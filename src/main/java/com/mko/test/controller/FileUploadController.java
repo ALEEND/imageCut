@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * @program: testdemo
- * @description:
+ * @description:原图的上传并保存
  * @author: yuxz
  * @create: 2019-03-25 14:55
  **/

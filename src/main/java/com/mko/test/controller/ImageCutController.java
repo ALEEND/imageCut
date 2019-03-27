@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * @program: testdemo
- * @description:
+ * @description:图片裁剪的返回(返回本地路径）
  * @author: yuxz
  * @create: 2019-03-25 17:31
  **/
@@ -34,12 +34,11 @@ public class ImageCutController {
     public ResponseResult cutImage(@RequestParam(value = "file") MultipartFile file) {
 
         ResponseResult result=new ResponseResult();
-
+        Map<String,Object> resultFile=new HashMap<>();
         try {
             //判断file是否为空
-            if(file==null){
-                result.setCode(IStatusMessage.SystemStatus.PARAM_ERROR.getCode());
-                return result;
+            if(file.isEmpty()){
+                resultFile.put("result",IStatusMessage.SystemStatus.ERROR.getMessage());
             }
 
             //将MultipartFile转换为file型
@@ -76,10 +75,8 @@ public class ImageCutController {
             BufferedImage image9=srcImage.getSubimage(500,870,380,340);
             FF.add(image9);
 
-
-            Map<String,Object> resultFile=new HashMap<>();
                 //循环截图
-                 for(int i=0;i<FF.size();i++){
+            for(int i=0;i<FF.size();i++){
 
                 String uuid = UUID.randomUUID().toString().replaceAll("-", "");
                 // 获得文件类型
@@ -106,7 +103,6 @@ public class ImageCutController {
                 ImageIO.write(test, "jpeg", outputfile);
                      resultFile.put("image"+(i+1),outputfile);
             }
-            result.setData1(resultFile);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,11 +110,16 @@ public class ImageCutController {
             result.setCode(IStatusMessage.SystemStatus.ERROR.getCode());
             result.setMessage(IStatusMessage.FILE_UPLOAD_ERROR);
         }
+        result.setData1(resultFile);
         return result;
     }
 
-
-    //返回类型
+    /**
+     * @program: testdemo
+     * @description:图片裁剪的返回 (返回byte）
+     * @author: yuxz
+     * @create: 2019-03-25 17:31
+     **/
     @RequestMapping(value = "/cutImages", method = RequestMethod.POST)
     public ResponseResult cutImages(@RequestParam(value = "file") MultipartFile file) {
 
